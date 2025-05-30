@@ -1,2 +1,3 @@
-# mine
-i post script here which are made by me for myself and my hub <3
+# Poop Hub Scripts
+- All scripts posted here are 100% made by me and completely keyless
+- I update this hub regularly with my latest work for different Roblox games.
