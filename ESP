@@ -1,0 +1,47 @@
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+
+local function getTeamColor(player)
+	if player.Team then
+		local name = player.Team.Name:lower()
+		if name:find("seek") then
+			return Color3.fromRGB(255, 0, 0) -- red for seekers
+		elseif name:find("hid") then
+			return Color3.fromRGB(0, 255, 0) -- green for hiders
+		end
+	end
+	return Color3.fromRGB(255, 255, 255)
+end
+
+local function applyCham(player)
+	if player == LocalPlayer then return end
+	local function add()
+		local character = player.Character
+		if character and not character:FindFirstChild("WaveCham") then
+			local highlight = Instance.new("Highlight")
+			highlight.Name = "WaveCham"
+			highlight.FillColor = getTeamColor(player)
+			highlight.OutlineColor = Color3.fromRGB(255, 255, 255)
+			highlight.FillTransparency = 0.3
+			highlight.OutlineTransparency = 0
+			highlight.Adornee = character
+			highlight.Parent = character
+		end
+	end
+	add()
+	player:GetPropertyChangedSignal("Team"):Connect(function()
+		if player.Character and player.Character:FindFirstChild("WaveCham") then
+			player.Character:FindFirstChild("WaveCham").FillColor = getTeamColor(player)
+		end
+	end)
+	player.CharacterAdded:Connect(function()
+		repeat task.wait() until player.Character and player.Character:FindFirstChild("HumanoidRootPart")
+		add()
+	end)
+end
+
+for _, player in pairs(Players:GetPlayers()) do
+	applyCham(player)
+end
+
+Players.PlayerAdded:Connect(applyCham)
